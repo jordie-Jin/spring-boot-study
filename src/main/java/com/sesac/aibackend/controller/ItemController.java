@@ -5,7 +5,6 @@ import com.sesac.aibackend.dto.ItemRequest;
 import com.sesac.aibackend.dto.ItemResponse;
 import com.sesac.aibackend.error.NotFoundException;
 import jakarta.validation.Valid;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
