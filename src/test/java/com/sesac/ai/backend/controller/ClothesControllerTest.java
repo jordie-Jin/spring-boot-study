@@ -38,11 +38,11 @@ class ClothesControllerTest {
                 }
                 """;
 
-        mockMvc.perform(post("/legacy/clothes")
+        mockMvc.perform(post("/clothes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/legacy/clothes/1"))
+                .andExpect(header().string("Location", "/clothes/1"))
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.name", is("Oxford Shirt")))
                 .andExpect(jsonPath("$.category", is("top")))
@@ -50,7 +50,7 @@ class ClothesControllerTest {
                 .andExpect(jsonPath("$.stock", is(12)))
                 .andExpect(jsonPath("$.soldOut", is(false)));
 
-        mockMvc.perform(get("/legacy/clothes/1"))
+        mockMvc.perform(get("/clothes/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("Oxford Shirt")));
     }

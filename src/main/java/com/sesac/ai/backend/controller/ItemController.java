@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/legacy/items")
+@RequestMapping("/items")
 @RequiredArgsConstructor
 public class ItemController {
 
@@ -31,7 +31,7 @@ public class ItemController {
     @PostMapping
     public ResponseEntity<ItemResponse> create(@Valid @RequestBody ItemRequest req) {
         ItemResponse created = itemService.create(req);
-        return ResponseEntity.created(URI.create("/legacy/items/" + created.id()))
+        return ResponseEntity.created(URI.create("/items/" + created.id()))
                 .body(created);
     }
 

@@ -19,7 +19,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/legacy/clothes")
+@RequestMapping("/clothes")
 @RequiredArgsConstructor
 public class ClothesController {
 
@@ -38,7 +38,7 @@ public class ClothesController {
     @PostMapping
     public ResponseEntity<ClothesResponse> create(@Valid @RequestBody ClothesRequest req) {
         ClothesResponse created = clothesService.create(req);
-        return ResponseEntity.created(URI.create("/legacy/clothes/" + created.id()))
+        return ResponseEntity.created(URI.create("/clothes/" + created.id()))
                 .body(created);
     }
 
