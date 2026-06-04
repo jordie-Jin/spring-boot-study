@@ -23,7 +23,7 @@ public class Clothes {
     private Integer stock;      // 재고
 
     private String material;    // 소재
-    private String season;      // 봄, 여름, 가을, 겨울
+    private String season;      // SS, FW
 
-    private Boolean soldOut;    // 품절 여부
+    private Boolean soldOut;    // 품절
 }
