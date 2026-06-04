@@ -1,13 +1,14 @@
-package com.sesac.aibackend.domain;
+package com.sesac.ai.backend.domain;
 
 import lombok.*;
+import org.springframework.stereotype.Service;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class Item {
+public class Clothes {
 
     private Long id;
     private String name;
