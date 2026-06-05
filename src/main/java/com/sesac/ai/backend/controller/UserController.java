@@ -36,7 +36,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponse> create(@Valid @RequestBody UserRequest req) {
-        // username은 unique 제약이 있어서 충돌은 404로
+        // username은 unique 제약이 있어서 충돌은 409로
         if (userService.existsByUsername(req.username())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
                     "username already exists: " + req.username());
