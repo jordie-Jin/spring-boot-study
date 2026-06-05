@@ -3,11 +3,8 @@ package com.sesac.ai.backend.dto;
 import com.sesac.ai.backend.domain.Role;
 import com.sesac.ai.backend.domain.User;
 
-/**
- * 사용자 응답 DTO.
- *
- * passwordHash는 어떤 경우에도 노출하지 않습니다.
- */
+
+ //사용자 응답 DTO
 public record UserResponse(Long id, String username, Role role) {
 
     public static UserResponse from(User user) {

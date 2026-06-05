@@ -20,8 +20,8 @@ public class ChatLogController {
     private final ChatLogService chatLogService;
 
     /**
-     * [getId 버전] userId(PK)로 대화 로그를 최신순으로 조회합니다.
-     * fetch join 없이 from()을 사용 → username은 응답에 null.
+     * [getId 버전] userId(PK)로 대화 로그를 최신순으로 조회
+     * fetch join 없이 from()을 사용 → username은 응답에 null
      * 예) GET /chat-logs?userId=1
      */
     @GetMapping
@@ -33,7 +33,7 @@ public class ChatLogController {
 
     /**
      * [getName 버전] userId(PK)로 조회하며 fetch join으로 user를 함께 로딩해 username까지 응답합니다.
-     * 트랜잭션이 닫힌 뒤에도 getUser().getUsername() 접근이 안전합니다.
+     * 트랜잭션이 닫힌 뒤에도 getUser().getUsername() 접근이 안전함
      * 예) GET /chat-logs/with-user?userId=1
      */
     @GetMapping("/with-user")
