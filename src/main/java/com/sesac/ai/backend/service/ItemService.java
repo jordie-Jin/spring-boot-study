@@ -4,55 +4,51 @@ import com.sesac.ai.backend.domain.Item;
 import com.sesac.ai.backend.dto.ItemRequest;
 import com.sesac.ai.backend.dto.ItemResponse;
 import com.sesac.ai.backend.error.NotFoundException;
+import com.sesac.ai.backend.repository.ItemRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
+@RequiredArgsConstructor
 public class ItemService {
 
-    private final Map<Long, Item> storage = new ConcurrentHashMap<>();
-    private final AtomicLong sequence = new AtomicLong(1);
+    private final ItemRepository repository;
 
     public List<ItemResponse> list() {
-        return storage.values().stream()
+        return repository.findAll().stream()
                 .map(ItemResponse::from)
                 .toList();
     }
 
     public ItemResponse get(Long id) {
-        return ItemResponse.from(findById(id));
+        return ItemResponse.from(findItem(id));
     }
 
-    public ItemResponse create(ItemRequest req) {
-        long id = sequence.getAndIncrement();
-        Item saved = req.toEntity();
-        saved.setId(id);
-        storage.put(id, saved);
+    public ItemResponse create(ItemRequest request) {
+        Item saved = repository.save(request.toEntity());
         return ItemResponse.from(saved);
     }
 
-    public ItemResponse update(Long id, ItemRequest req) {
-        Item existing = findById(id);
-        existing.setName(req.name());
-        existing.setPrice(req.price());
-        return ItemResponse.from(existing);
+    public ItemResponse update(Long id, ItemRequest request) {
+        Item item = findItem(id);
+        item.setName(request.name());
+        item.setPrice(request.price());
+
+        return ItemResponse.from(repository.save(item));
     }
 
     public void delete(Long id) {
-        if (storage.remove(id) == null) {
-            throw NotFoundException.of("item", id);
+        if (!repository.existsById(id)) {
+            throw NotFoundException.of("Item", id);
         }
+
+        repository.deleteById(id);
     }
 
-    private Item findById(Long id) {
-        Item item = storage.get(id);
-        if (item == null) {
-            throw NotFoundException.of("item", id);
-        }
-        return item;
+    private Item findItem(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> NotFoundException.of("Item", id));
     }
 }

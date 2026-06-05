@@ -1,9 +1,9 @@
 services:
   postgres:
     image: postgres:16
-    container_name: pg-aibackend
+    container_name: pg-ai.backend
     environment:
-      POSTGRES_DB: aibackend
+      POSTGRES_DB: ai.backend
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
