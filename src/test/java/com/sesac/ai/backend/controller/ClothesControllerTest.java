@@ -1,10 +1,12 @@
 package com.sesac.ai.backend.controller;
 
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
@@ -23,6 +25,7 @@ class ClothesControllerTest {
 
     @Test
     void createAndGetClothes() throws Exception {
+        String token = issueToken("clothes-test", "password123");
         String body = """
                 {
                   "name": "Oxford Shirt",
@@ -40,6 +43,7 @@ class ClothesControllerTest {
 
         mockMvc.perform(post("/clothes")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)
                         .content(body))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/clothes/1"))
@@ -50,8 +54,34 @@ class ClothesControllerTest {
                 .andExpect(jsonPath("$.stock", is(12)))
                 .andExpect(jsonPath("$.soldOut", is(false)));
 
-        mockMvc.perform(get("/clothes/1"))
+        mockMvc.perform(get("/clothes/1")
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("Oxford Shirt")));
+    }
+
+    private String issueToken(String username, String password) throws Exception {
+        mockMvc.perform(post("/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "%s",
+                                  "password": "%s"
+                                }
+                                """.formatted(username, password)))
+                .andExpect(status().isCreated());
+
+        MvcResult result = mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "%s",
+                                  "password": "%s"
+                                }
+                                """.formatted(username, password)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        return JsonPath.read(result.getResponse().getContentAsString(), "$.token");
     }
 }

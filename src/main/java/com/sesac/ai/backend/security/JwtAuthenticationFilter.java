@@ -41,8 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                      HttpServletResponse response,
                                      FilterChain chain) throws ServletException, IOException {
         String header = request.getHeader(HEADER);
-        if (header != null && header.startsWith(PREFIX)) {
-            String token = header.substring(PREFIX.length());
+        String token = resolveBearerToken(header);
+        if (token != null) {
             try {
                 Claims claims = jwtUtil.parse(token);
                 String username = claims.getSubject();
@@ -61,5 +61,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         chain.doFilter(request, response);
+    }
+
+    private String resolveBearerToken(String header) {
+        if (header == null) {
+            return null;
+        }
+
+        String value = header.trim();
+        if (value.length() <= PREFIX.length()
+                || !value.regionMatches(true, 0, PREFIX.trim(), 0, PREFIX.trim().length())
+                || !Character.isWhitespace(value.charAt(PREFIX.trim().length()))) {
+            return null;
+        }
+
+        String token = value.substring(PREFIX.trim().length()).trim();
+        return token.isEmpty() ? null : token;
     }
 }

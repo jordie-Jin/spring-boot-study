@@ -38,7 +38,7 @@ out/
 
 ### Env ###
 .env
-
+keys.json
 ### Python ###
 __pycache__/
 *.pyc

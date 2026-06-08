@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     model_name: str = "gpt-5-nano"
     port: int = 8000
     request_timeout: float = 30.0
+    jwt_secret: str = "please-change-this-to-a-32-byte-minimum-secret-key"
 
 @lru_cache
 def get_settings() -> Settings:

@@ -6,7 +6,7 @@ import logging
 from .schemas import ChatRequest, ChatResponse
 
 from .errors import handle_unexpected
-from .middleware import add_process_time
+from .middleware import add_process_time, require_bearer_token
 from .schemas import ChatRequest, ChatResponse
 
 from .routers import chat_langchain, chat_crew
@@ -25,6 +25,7 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type", "Authorization"],
 )
+app.middleware("http")(require_bearer_token)
 app.middleware("http")(add_process_time)
 
 app.include_router(chat_langchain.router)
