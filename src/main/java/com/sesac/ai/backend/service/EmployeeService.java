@@ -2,8 +2,8 @@ package com.sesac.ai.backend.service;
 
 import com.sesac.ai.backend.domain.Department;
 import com.sesac.ai.backend.domain.Employee;
-import com.sesac.ai.backend.dto.EmployeeRequest;
-import com.sesac.ai.backend.dto.EmployeeResponse;
+import com.sesac.ai.backend.dto.request.EmployeeRequest;
+import com.sesac.ai.backend.dto.response.EmployeeResponse;
 import com.sesac.ai.backend.error.NotFoundException;
 import com.sesac.ai.backend.repository.DepartmentRepository;
 import com.sesac.ai.backend.repository.EmployeeRepository;

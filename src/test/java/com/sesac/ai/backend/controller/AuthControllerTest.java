@@ -90,6 +90,13 @@ class AuthControllerTest {
                 .andExpect(header().string("Location", startsWith("https://accounts.google.com/o/oauth2/v2/auth")));
     }
 
+    @Test
+    void kakaoOAuthLoginStartsAuthorizationRedirect() throws Exception {
+        mockMvc.perform(get("/oauth2/authorization/kakao"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("Location", startsWith("https://kauth.kakao.com/oauth/authorize")));
+    }
+
     private String issueToken(String username, String password) throws Exception {
         mockMvc.perform(post("/signup")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -51,17 +51,27 @@ public class User {
      * 소셜(OAuth2) 로그인 사용자 생성 팩토리.
      *
      * 로컬 비밀번호가 없으므로 passwordHash는 NULL로 두고,
-     * 구글이 보증하는 불변 식별자(sub)를 providerId에 저장합니다.
-     * 이로써 이 계정은 폼 로그인(/login)으로는 인증될 수 없고 구글 로그인만 가능합니다.
+     * OAuth 공급자가 보증하는 불변 식별자를 providerId에 저장합니다.
+     * 비밀번호가 없으므로 이 계정은 폼 로그인(/login)으로 인증될 수 없습니다.
      */
-    public static User oauthUser(String email, String providerId) {
+    public static User oauthUser(String email, String provider, String providerId) {
         return User.builder()
                 .username(email)
                 .passwordHash(null)
                 .role(Role.USER)
-                .provider("GOOGLE")
+                .provider(provider)
                 .providerId(providerId)
                 .build();
+    }
+
+    /**
+     * 역할 변경 도메인 메서드.
+     *
+     * Lombok @Setter를 두지 않고 의도된 메서드만 노출해 캡슐화를 유지합니다.
+     * 값 검증은 입력 경계에서 enum 타입(RoleUpdateRequest.role)으로 강제됩니다.
+     */
+    public void changeRole(Role role) {
+        this.role = role;
     }
 
     /**

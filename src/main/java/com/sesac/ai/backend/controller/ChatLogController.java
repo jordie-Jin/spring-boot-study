@@ -1,8 +1,8 @@
 package com.sesac.ai.backend.controller;
 
 import com.sesac.ai.backend.domain.ChatLog;
-import com.sesac.ai.backend.dto.ChatLogRequest;
-import com.sesac.ai.backend.dto.ChatLogResponse;
+import com.sesac.ai.backend.dto.request.ChatLogRequest;
+import com.sesac.ai.backend.dto.response.ChatLogResponse;
 import com.sesac.ai.backend.service.ChatLogService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

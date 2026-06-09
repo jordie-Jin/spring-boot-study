@@ -1,7 +1,7 @@
 package com.sesac.ai.backend.controller;
 
-import com.sesac.ai.backend.dto.ItemRequest;
-import com.sesac.ai.backend.dto.ItemResponse;
+import com.sesac.ai.backend.dto.request.ItemRequest;
+import com.sesac.ai.backend.dto.response.ItemResponse;
 import com.sesac.ai.backend.service.ItemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

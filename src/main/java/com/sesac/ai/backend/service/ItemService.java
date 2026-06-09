@@ -1,8 +1,8 @@
 package com.sesac.ai.backend.service;
 
 import com.sesac.ai.backend.domain.Item;
-import com.sesac.ai.backend.dto.ItemRequest;
-import com.sesac.ai.backend.dto.ItemResponse;
+import com.sesac.ai.backend.dto.request.ItemRequest;
+import com.sesac.ai.backend.dto.response.ItemResponse;
 import com.sesac.ai.backend.error.NotFoundException;
 import com.sesac.ai.backend.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;

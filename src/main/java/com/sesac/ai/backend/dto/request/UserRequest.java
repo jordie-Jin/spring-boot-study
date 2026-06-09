@@ -1,4 +1,4 @@
-package com.sesac.ai.backend.dto;
+package com.sesac.ai.backend.dto.request;
 
 import com.sesac.ai.backend.domain.Role;
 import com.sesac.ai.backend.domain.User;

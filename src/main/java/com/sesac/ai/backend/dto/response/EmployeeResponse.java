@@ -1,4 +1,4 @@
-package com.sesac.ai.backend.dto;
+package com.sesac.ai.backend.dto.response;
 
 import com.sesac.ai.backend.domain.Employee;
 

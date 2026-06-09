@@ -1,8 +1,8 @@
 package com.sesac.ai.backend.controller;
 
-import com.sesac.ai.backend.dto.DepartmentRequest;
-import com.sesac.ai.backend.dto.DepartmentResponse;
-import com.sesac.ai.backend.dto.EmployeeResponse;
+import com.sesac.ai.backend.dto.request.DepartmentRequest;
+import com.sesac.ai.backend.dto.response.DepartmentResponse;
+import com.sesac.ai.backend.dto.response.EmployeeResponse;
 import com.sesac.ai.backend.service.DepartmentService;
 import com.sesac.ai.backend.service.EmployeeService;
 import jakarta.validation.Valid;

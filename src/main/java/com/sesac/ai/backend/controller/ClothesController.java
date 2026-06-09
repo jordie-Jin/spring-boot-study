@@ -1,7 +1,7 @@
 package com.sesac.ai.backend.controller;
 
-import com.sesac.ai.backend.dto.ClothesRequest;
-import com.sesac.ai.backend.dto.ClothesResponse;
+import com.sesac.ai.backend.dto.request.ClothesRequest;
+import com.sesac.ai.backend.dto.response.ClothesResponse;
 import com.sesac.ai.backend.service.ClothesService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

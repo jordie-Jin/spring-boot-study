@@ -2,8 +2,8 @@ package com.sesac.ai.backend.controller;
 
 import com.sesac.ai.backend.domain.Role;
 import com.sesac.ai.backend.domain.User;
-import com.sesac.ai.backend.dto.LoginRequest;
-import com.sesac.ai.backend.dto.SignupRequest;
+import com.sesac.ai.backend.dto.request.LoginRequest;
+import com.sesac.ai.backend.dto.request.SignupRequest;
 import com.sesac.ai.backend.error.DuplicateException;
 import com.sesac.ai.backend.repository.UserRepository;
 import com.sesac.ai.backend.security.JwtUtil;

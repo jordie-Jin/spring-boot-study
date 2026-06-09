@@ -1,8 +1,8 @@
 package com.sesac.ai.backend.controller;
 
 import com.sesac.ai.backend.domain.User;
-import com.sesac.ai.backend.dto.UserRequest;
-import com.sesac.ai.backend.dto.UserResponse;
+import com.sesac.ai.backend.dto.request.UserRequest;
+import com.sesac.ai.backend.dto.response.UserResponse;
 import com.sesac.ai.backend.error.NotFoundException;
 import com.sesac.ai.backend.service.UserService;
 import jakarta.validation.Valid;

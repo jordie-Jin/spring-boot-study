@@ -1,4 +1,4 @@
-package com.sesac.ai.backend.dto;
+package com.sesac.ai.backend.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 

@@ -1,8 +1,8 @@
 package com.sesac.ai.backend.service;
 
 import com.sesac.ai.backend.domain.Department;
-import com.sesac.ai.backend.dto.DepartmentRequest;
-import com.sesac.ai.backend.dto.DepartmentResponse;
+import com.sesac.ai.backend.dto.request.DepartmentRequest;
+import com.sesac.ai.backend.dto.response.DepartmentResponse;
 import com.sesac.ai.backend.error.NotFoundException;
 import com.sesac.ai.backend.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;

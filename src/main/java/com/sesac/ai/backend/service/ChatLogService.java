@@ -28,6 +28,17 @@ public class ChatLogService {
     public ChatLog save(Long userId, String prompt, String response) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> NotFoundException.of("user", userId));
+        return save(user, prompt, response);
+    }
+
+    @Transactional
+    public ChatLog save(String username, String prompt, String response) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("user not found: " + username));
+        return save(user, prompt, response);
+    }
+
+    private ChatLog save(User user, String prompt, String response) {
         return chatLogRepository.save(
                 ChatLog.builder()
                         .user(user)

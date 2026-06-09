@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
 
 @Component
@@ -32,13 +34,14 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             HttpServletResponse response,
             Authentication authentication) throws IOException {
 
-        OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
-        String providerId = resolveProviderId(oauthUser);
-        String email = resolveEmail(oauthUser, providerId);
+        OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+        OAuth2User oauthUser = oauthToken.getPrincipal();
+        String provider = oauthToken.getAuthorizedClientRegistrationId().toUpperCase();
+        String providerId = resolveProviderId(provider, oauthUser);
+        String email = resolveEmail(provider, oauthUser, providerId);
 
-        User user = userRepository.findByProviderAndProviderId("GOOGLE", providerId)
-                .or(() -> userRepository.findByUsername(email))
-                .orElseGet(() -> userRepository.save(User.oauthUser(email, providerId)));
+        User user = userRepository.findByProviderAndProviderId(provider, providerId)
+                .orElseGet(() -> createOAuthUser(provider, providerId, email));
 
         String token = jwtUtil.generate(user.getUsername(), user.getRole().name());
         response.sendRedirect(UriComponentsBuilder.fromUriString(frontendRedirectUri)
@@ -47,21 +50,53 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                 .toUriString());
     }
 
-    private String resolveProviderId(OAuth2User oauthUser) {
-        if (oauthUser instanceof OidcUser oidcUser) {
+    private User createOAuthUser(String provider, String providerId, String email) {
+        String username = userRepository.existsByUsername(email)
+                ? fallbackUsername(provider, providerId)
+                : email;
+
+        return userRepository.save(User.oauthUser(username, provider, providerId));
+    }
+
+    private String fallbackUsername(String provider, String providerId) {
+        return providerId + "@" + provider.toLowerCase() + ".oauth";
+    }
+
+    private String resolveProviderId(String provider, OAuth2User oauthUser) {
+        if ("GOOGLE".equals(provider) && oauthUser instanceof OidcUser oidcUser) {
             return oidcUser.getSubject();
         }
 
-        return Objects.requireNonNull(oauthUser.getAttribute("sub"), "Google OAuth subject is missing");
+        Object providerId = switch (provider) {
+            case "GOOGLE" -> oauthUser.getAttribute("sub");
+            case "KAKAO" -> oauthUser.getAttribute("id");
+            default -> throw new IllegalArgumentException("Unsupported OAuth provider: " + provider);
+        };
+
+        return Objects.requireNonNull(providerId, provider + " OAuth user ID is missing").toString();
     }
 
-    private String resolveEmail(OAuth2User oauthUser, String providerId) {
-        String email = oauthUser instanceof OidcUser oidcUser
-                ? oidcUser.getEmail()
-                : oauthUser.getAttribute("email");
+    private String resolveEmail(String provider, OAuth2User oauthUser, String providerId) {
+        String email = switch (provider) {
+            case "GOOGLE" -> oauthUser instanceof OidcUser oidcUser
+                    ? oidcUser.getEmail()
+                    : oauthUser.getAttribute("email");
+            case "KAKAO" -> kakaoEmail(oauthUser);
+            default -> null;
+        };
 
         return email == null || email.isBlank()
-                ? providerId + "@google.oauth"
+                ? fallbackUsername(provider, providerId)
                 : email;
+    }
+
+    private String kakaoEmail(OAuth2User oauthUser) {
+        Map<String, Object> kakaoAccount = oauthUser.getAttribute("kakao_account");
+        if (kakaoAccount == null) {
+            return null;
+        }
+
+        Object email = kakaoAccount.get("email");
+        return email == null ? null : email.toString();
     }
 }
