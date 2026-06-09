@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -39,10 +40,11 @@ public class ChatController {
     @PostMapping
     public ChatResponse chat(
             @Valid @RequestBody ChatRequest req,
-            @AuthenticationPrincipal UserDetails user) {
+            @AuthenticationPrincipal UserDetails user,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
 
         String username = user.getUsername();
-        ChatResponse response = pythonClient.chat(req.prompt()).block();
+        ChatResponse response = pythonClient.chat(req.prompt(), authorization).block();
         if (response == null) {
             throw new IllegalStateException("python returned null");
         }

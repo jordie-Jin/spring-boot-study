@@ -42,6 +42,13 @@ keys.json
 ### Python ###
 __pycache__/
 *.pyc
+.venv/
+.uv-cache/
+.pytest_cache/
+.ruff_cache/
+chroma_db/
+AI_server/
+fastapi*.log
 
 ### Docker / DB ###
 pgdata/

@@ -38,3 +38,14 @@ class ChatResponse(BaseModel):
 
     answer: str = Field(..., description="모델 응답 본문")
     model: str = Field(..., description="실제 사용된 모델 식별자")
+
+
+class IngestResponse(BaseModel):
+    filename: str
+    pages: int
+    chunks_added: int
+    total_chunks: int
+
+
+class RagRequest(BaseModel):
+    question: str = Field(..., min_length=1, max_length=500)

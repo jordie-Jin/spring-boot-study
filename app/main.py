@@ -3,13 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import logging
 
-from .schemas import ChatRequest, ChatResponse
-
 from .errors import handle_unexpected
 from .middleware import add_process_time, require_bearer_token
 from .schemas import ChatRequest, ChatResponse
 
-from .routers import chat_langchain, chat_crew
+from .routers import chat_crew, chat_langchain, chat_rag, ingest
 
 app = FastAPI(title="AI Backend", version="1.0.0")
 
@@ -30,6 +28,8 @@ app.middleware("http")(add_process_time)
 
 app.include_router(chat_langchain.router)
 app.include_router(chat_crew.router)
+app.include_router(ingest.router)
+app.include_router(chat_rag.router)
 
 app.add_exception_handler(Exception, handle_unexpected)
 
