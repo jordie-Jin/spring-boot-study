@@ -59,6 +59,13 @@ public class ChatLogService {
         return chatLogRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
+    @Transactional(readOnly = true)
+    public List<ChatLog> findByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> NotFoundException.of("user", username));
+        return chatLogRepository.findByUserIdOrderByCreatedAtDesc(user.getId());
+    }
+
     /**
      * fetch join 조회 — userId(PK)로 조회하며 user를 함께 로딩.
      * 응답에서 getUser().getUsername()을 읽는 fromWithUsername()과 짝을 이룹니다.

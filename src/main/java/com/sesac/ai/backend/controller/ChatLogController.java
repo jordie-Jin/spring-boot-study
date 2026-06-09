@@ -7,6 +7,9 @@ import com.sesac.ai.backend.service.ChatLogService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -23,10 +26,10 @@ public class ChatLogController {
      * [getId 버전] userId(PK)로 대화 로그를 최신순으로 조회
      * fetch join 없이 from()을 사용 → username은 응답에 null
      * 예) GET /chat-logs?userId=1
-     */
+    */
     @GetMapping
-    public List<ChatLogResponse> list(@RequestParam Long userId) {
-        return chatLogService.findByUserId(userId).stream()
+    public List<ChatLogResponse> list(@AuthenticationPrincipal UserDetails user) {
+        return chatLogService.findByUsername(user.getUsername()).stream()
                 .map(ChatLogResponse::from)
                 .toList();
     }
@@ -35,7 +38,8 @@ public class ChatLogController {
      * [getName 버전] userId(PK)로 조회하며 fetch join으로 user를 함께 로딩해 username까지 응답합니다.
      * 트랜잭션이 닫힌 뒤에도 getUser().getUsername() 접근이 안전함
      * 예) GET /chat-logs/with-user?userId=1
-     */
+    */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/with-user")
     public List<ChatLogResponse> listWithUser(@RequestParam Long userId) {
         return chatLogService.findByUserIdWithUser(userId).stream()
@@ -44,8 +48,10 @@ public class ChatLogController {
     }
 
     @PostMapping
-    public ResponseEntity<ChatLogResponse> create(@Valid @RequestBody ChatLogRequest req) {
-        ChatLog saved = chatLogService.save(req.userId(), req.prompt(), req.response());
+    public ResponseEntity<ChatLogResponse> create(
+            @AuthenticationPrincipal UserDetails user,
+            @Valid @RequestBody ChatLogRequest req) {
+        ChatLog saved = chatLogService.save(user.getUsername(), req.prompt(), req.response());
         URI location = URI.create("/chat-logs/" + saved.getId());
         return ResponseEntity.created(location).body(ChatLogResponse.from(saved));
     }
